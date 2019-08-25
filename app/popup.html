@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="app">
+    <div v-if="activeTab" class="tab-new">
+      <strong>{{ activeTab.title }}</strong>
+      <a href="###" class="pull-right" v-on:click="saveNewTab">暂存</a>
+    </div>
+    <div class="tabs">
+      <a v-for="tab in tabs" href="###" v-on:click="{{ openTab(tab) }}">{{ tab.title }}</a>
+    </div>
+  </div>
+
+  <script src="vue.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

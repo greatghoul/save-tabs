@@ -1,0 +1,45 @@
+body {
+  width: 300px;
+  height: 300px;
+  margin: 0;
+  padding: 0;
+}
+
+.pull-right {
+  float: right;
+}
+
+.tab-new {
+  background: #dddddd;
+  padding: 10px 10px;
+  display: flex;
+  border: 1px solid #cacaca;
+}
+
+.tab-new a {
+  margin-left: 3px;
+}
+
+.tab-new strong {
+  flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.tabs {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.tabs a {
+  padding: 5px 10px;
+  display: block;
+  text-decoration: none;
+  margin: 1px;
+  background-color: #f5f5f5;
+}
+
+.tabs a:hover {
+  background-color: #eeeeee;
+}

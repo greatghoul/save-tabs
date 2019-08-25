@@ -1,0 +1,9 @@
+{
+  "name": "extension-name",
+  "private": true,
+  "standard": {
+    "globals": [
+      "chrome"
+    ]
+  }
+}
