@@ -12,12 +12,26 @@
 
   "browser_action": {
     "default_icon": "icon.png",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_title": "Click - Open Saved List\nAlt+Click - Save Current Tab"
   },
+
+  "background": {
+    "scripts": ["event.js"],
+    "persistent": false
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["page.js"],
+      "run_at": "document_start"
+    }
+  ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'" ,
 
   "permissions": [
-    "activeTab"
+    "tabs"
   ]
 }
