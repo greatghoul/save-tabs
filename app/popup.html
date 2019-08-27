@@ -8,7 +8,7 @@
   <div id="app">
     <div v-if="activeTab" class="tab-new">
       <strong>{{ activeTab.title }}</strong>
-      <a href="###" class="pull-right" v-on:click="saveNewTab">暂存</a>
+      <a href="###" class="pull-right" v-on:click="saveNewTab">{{ btnSaveText }}</a>
     </div>
     <div class="tabs">
       <a v-for="tab in tabs" href="###" v-on:click="{{ openTab(tab) }}">{{ tab.title }}</a>

@@ -2,7 +2,8 @@ new Vue({
   el: '#app',
   data: {
     tabs: [],
-    activeTab: null
+    activeTab: null,
+    btnSaveText: chrome.i18n.getMessage('btnSave')
   },
   created () {
     this.fetchTabs()

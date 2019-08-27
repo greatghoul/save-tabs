@@ -1,9 +1,11 @@
 {
   "manifest_version": 2,
 
-  "name": "标签页暂存",
-  "description": "暂存当前标签页",
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDesc__",
   "version": "1.0.0",
+
+  "default_locale": "en",
 
   "icons": {
     "48": "icon.png",
@@ -13,7 +15,7 @@
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html",
-    "default_title": "Click - Open Saved List\nAlt+Click - Save Current Tab"
+    "default_title": "__MSG_appTooltip__"
   },
 
   "background": {

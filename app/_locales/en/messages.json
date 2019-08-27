@@ -1,0 +1,18 @@
+{
+  "appName": {
+    "message": "Save Tabs",
+    "description": "Name of the application."
+  },
+  "appDesc": {
+    "message": "Save the active tab on 1-CLICK",
+    "description": "Description of the application."
+  },
+  "appTooltip": {
+  	"message": "Click - Open Saved List\nAlt+Click - Save Current Tab",
+  	"description": "Title of the popup icon."
+  },
+  "btnSave": {
+  	"message": "SAVE",
+  	"description": "Button to save the active tab."
+  }
+}
