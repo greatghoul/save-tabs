@@ -30,6 +30,7 @@ body {
 .tabs {
   max-height: 300px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .tabs a {
@@ -38,6 +39,7 @@ body {
   text-decoration: none;
   margin: 1px;
   background-color: #f5f5f5;
+  word-break: break-word;
 }
 
 .tabs a:hover {
