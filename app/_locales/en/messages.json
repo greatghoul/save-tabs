@@ -8,7 +8,7 @@
     "description": "Description of the application."
   },
   "appTooltip": {
-  	"message": "Click - Open Saved List\nAlt+Click - Save Current Tab",
+  	"message": "Click - Open Saved List\n\nCtrl+Click - Save Current Tab",
   	"description": "Title of the popup icon."
   },
   "btnSave": {

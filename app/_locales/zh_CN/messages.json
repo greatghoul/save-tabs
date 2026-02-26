@@ -8,7 +8,7 @@
     "description": "Description of the application."
   },
   "appTooltip": {
-  	"message": "Click - 打开暂存列表\nAlt+Click - 快速暂存当前标签页",
+  	"message": "Click - 打开暂存列表\n\nCtrl+Click - 快速暂存当前标签页",
   	"description": "Title of the popup icon."
   },
   "btnSave": {

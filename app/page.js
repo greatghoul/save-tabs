@@ -1,16 +1,20 @@
 let fastSave = false
 
-document.addEventListener('keydown', event => {
-	if (event.altKey) {
-		chrome.runtime.sendMessage({ action: 'fast-save-on' })
-		fastSave = true
-	}
-})
+const enableFastSave = event => {
+  if (event.ctrlKey && !fastSave) {
+    chrome.runtime.sendMessage({ action: 'fast-save-on' })
+    fastSave = true
+  }
+}
 
+const disableFastSave = event => {
+  if (fastSave) {
+    chrome.runtime.sendMessage({ action: 'fast-save-off' })
+    fastSave = false    
+  }
+}
 
-document.addEventListener('keyup', event => {
-	if (fastSave) {
-		chrome.runtime.sendMessage({ action: 'fast-save-off' })
-		fastSave = false
-	}
-})
+window.addEventListener('keydown', enableFastSave, false)
+window.addEventListener('keyup', disableFastSave, false)
+window.addEventListener('blur', disableFastSave, false)
+window.addEventListener('beforeunload', disableFastSave, false)

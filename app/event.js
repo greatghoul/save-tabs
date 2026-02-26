@@ -1,5 +1,3 @@
-chrome.browserAction.setBadgeBackgroundColor({ color: 'transparent' })
-
 function saveActiveTab (activeTab) {
 	const key = `tab-${Date.now()}`
 	const tab = {
@@ -14,16 +12,15 @@ function saveActiveTab (activeTab) {
 
 function toggleFastSave (flag) {
 	chrome.browserAction.setPopup({ popup: flag ? '' : 'popup.html' })
+	chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('appTooltip') })
 	chrome.browserAction.setBadgeText({ text: flag ? 'F' : '' })
 }
 
 chrome.runtime.onMessage.addListener(message => {
-	switch (message.action) {
-		case 'fast-save-on':
-			toggleFastSave(true)
-			break
-		default:
-			toggleFastSave(false)
+	if (message.action === 'fast-save-on') {
+		toggleFastSave(true)
+	} else {
+		toggleFastSave(false)
 	}
 })
 
