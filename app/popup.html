@@ -6,16 +6,14 @@
 </head>
 <body>
   <div id="app">
-    <div v-if="activeTab" class="tab-new">
-      <strong>{{ activeTab.title }}</strong>
-      <a href="###" class="pull-right" v-on:click="saveNewTab">{{ btnSaveText }}</a>
+    <div id="active-tab" class="tab-new" style="display:none;">
+      <strong id="active-tab-title"></strong>
+      <a id="save-active-tab" href="#" class="pull-right"></a>
     </div>
-    <div class="tabs">
-      <a v-for="tab in tabs" href="###" v-on:click="{{ openTab(tab) }}">{{ tab.title }}</a>
+    <div id="saved-tabs" class="tabs">
     </div>
   </div>
 
-  <script src="vue.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

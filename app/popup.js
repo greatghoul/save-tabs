@@ -1,47 +1,89 @@
-new Vue({
-  el: '#app',
-  data: {
-    tabs: [],
-    activeTab: null,
-    btnSaveText: chrome.i18n.getMessage('btnSave')
-  },
-  created () {
-    this.fetchTabs()
-    this.fetchActiveTab()
-  },
-  methods: {
-    fetchTabs () {
-      const tabs = []
-      for (const key in localStorage) {
-        if (key.startsWith('tab-')) {
-          tabs.push(JSON.parse(localStorage[key]))
-        }
-      }
-      this.tabs = tabs.sort((a, b) => b.key.localeCompare(a.key))
-    },
-    fetchActiveTab () {
-      chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
-        this.activeTab = tabs[0]
-      })
-    },
-    saveNewTab () {
-      const key = `tab-${Date.now()}`
-      const tab = {
-        key: key,
-        title: this.activeTab.title,
-        url: this.activeTab.url
-      }
+const state = {
+  tabs: [],
+  activeTab: null
+}
 
-      localStorage[key] = JSON.stringify(tab)
-      chrome.tabs.remove(this.activeTab.id)
-    },
-    openTab (tab) {
-      chrome.tabs.create({ active: false, url: tab.url }, () => {
-        localStorage.removeItem(tab.key)
+const activeTabContainer = document.getElementById('active-tab')
+const activeTabTitle = document.getElementById('active-tab-title')
+const saveActiveTabButton = document.getElementById('save-active-tab')
+const savedTabsContainer = document.getElementById('saved-tabs')
 
-        const index = this.tabs.findIndex(x => x.key === tab.key)
-        this.$delete(this.tabs, index)
-      })
-    }
-  }
+saveActiveTabButton.textContent = chrome.i18n.getMessage('btnSave')
+saveActiveTabButton.addEventListener('click', event => {
+  event.preventDefault()
+  saveNewTab()
 })
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchTabs()
+  fetchActiveTab()
+})
+
+function fetchTabs () {
+  chrome.storage.local.get(null, items => {
+    const tabs = Object.keys(items)
+      .filter(key => key.startsWith('tab-'))
+      .map(key => items[key])
+
+    state.tabs = tabs.sort((a, b) => b.key.localeCompare(a.key))
+    renderTabs()
+  })
+}
+
+function fetchActiveTab () {
+  chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
+    state.activeTab = tabs[0] || null
+    renderActiveTab()
+  })
+}
+
+function saveNewTab () {
+  if (!state.activeTab) return
+
+  const key = `tab-${Date.now()}`
+  const tab = {
+    key: key,
+    title: state.activeTab.title,
+    url: state.activeTab.url
+  }
+
+  chrome.storage.local.set({ [key]: tab }, () => {
+    if (chrome.runtime.lastError) return
+    chrome.tabs.remove(state.activeTab.id)
+  })
+}
+
+function openTab (tab) {
+  chrome.tabs.create({ active: false, url: tab.url }, () => {
+    chrome.storage.local.remove(tab.key, () => {
+      state.tabs = state.tabs.filter(item => item.key !== tab.key)
+      renderTabs()
+    })
+  })
+}
+
+function renderActiveTab () {
+  if (!state.activeTab) {
+    activeTabContainer.style.display = 'none'
+    return
+  }
+
+  activeTabTitle.textContent = state.activeTab.title
+  activeTabContainer.style.display = 'flex'
+}
+
+function renderTabs () {
+  savedTabsContainer.innerHTML = ''
+
+  state.tabs.forEach(tab => {
+    const tabLink = document.createElement('a')
+    tabLink.href = '#'
+    tabLink.textContent = tab.title
+    tabLink.addEventListener('click', event => {
+      event.preventDefault()
+      openTab(tab)
+    })
+
+    savedTabsContainer.appendChild(tabLink)
+  })
+}

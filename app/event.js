@@ -6,14 +6,16 @@ function saveActiveTab (activeTab) {
 	  url: activeTab.url
 	}
 
-	localStorage[key] = JSON.stringify(tab)
-	chrome.tabs.remove(activeTab.id)
+	chrome.storage.local.set({ [key]: tab }, () => {
+		if (chrome.runtime.lastError) return
+		chrome.tabs.remove(activeTab.id)
+	})
 }
 
 function toggleFastSave (flag) {
-	chrome.browserAction.setPopup({ popup: flag ? '' : 'popup.html' })
-	chrome.browserAction.setTitle({ title: chrome.i18n.getMessage('appTooltip') })
-	chrome.browserAction.setBadgeText({ text: flag ? 'F' : '' })
+	chrome.action.setPopup({ popup: flag ? '' : 'popup.html' })
+	chrome.action.setTitle({ title: chrome.i18n.getMessage('appTooltip') })
+	chrome.action.setBadgeText({ text: flag ? 'F' : '' })
 }
 
 chrome.runtime.onMessage.addListener(message => {
@@ -24,7 +26,7 @@ chrome.runtime.onMessage.addListener(message => {
 	}
 })
 
-chrome.browserAction.onClicked.addListener(tab => {
+chrome.action.onClicked.addListener(tab => {
 	saveActiveTab(tab)
 	toggleFastSave(false)
 })
