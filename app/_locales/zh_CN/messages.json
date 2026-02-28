@@ -14,5 +14,17 @@
   "btnSave": {
   	"message": "暂存",
   	"description": "Button to save the active tab."
+  },
+  "headerTitle": {
+  	"message": "已暂存标签页",
+  	"description": "Header title for the saved tabs list."
+  },
+  "searchPlaceholder": {
+  	"message": "搜索",
+  	"description": "Placeholder text for search input."
+  },
+  "footerTip": {
+  	"message": "+ 点击图标可直接暂存当前标签页",
+  	"description": "Footer tip for fast save mode (after the Ctrl key)."
   }
 }

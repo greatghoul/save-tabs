@@ -1,6 +1,8 @@
 import { html } from '../libs/preact.js'
 import { styled } from '../libs/goober.js'
 
+const footerTip = chrome.i18n.getMessage('footerTip')
+
 const FooterRoot = styled('div')`
   font-size: 11px;
   color: #6b7a99;
@@ -19,7 +21,7 @@ const FooterKey = styled('kbd')`
 export function Footer () {
   return html`
     <${FooterRoot}>
-      <${FooterKey}>Ctrl<//> + Click icon to save current tab without opening popup
+      <${FooterKey}>Ctrl<//> ${footerTip}
     <//>
   `
 }

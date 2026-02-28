@@ -6,7 +6,7 @@ function saveActiveTab (activeTab) {
 	  url: activeTab.url
 	}
 
-	chrome.storage.local.set({ [key]: tab }, () => {
+	chrome.storage.sync.set({ [key]: tab }, () => {
 		if (chrome.runtime.lastError) return
 		chrome.tabs.remove(activeTab.id)
 	})

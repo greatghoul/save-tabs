@@ -48,7 +48,7 @@ function PopupApp () {
   const [searchQuery, setSearchQuery] = useState('')
 
   const fetchTabs = useCallback(() => {
-    chrome.storage.local.get(null, items => {
+    chrome.storage.sync.get(null, items => {
       const nextTabs = Object.keys(items)
         .filter(key => key.startsWith('tab-'))
         .map(key => items[key])
@@ -76,7 +76,7 @@ function PopupApp () {
         url: activeTab.url
       }
 
-      chrome.storage.local.set({ [key]: tab }, () => {
+      chrome.storage.sync.set({ [key]: tab }, () => {
         if (chrome.runtime.lastError) return
         chrome.tabs.remove(activeTab.id)
       })
@@ -86,7 +86,7 @@ function PopupApp () {
 
   const openTab = useCallback(tab => {
     chrome.tabs.create({ active: false, url: tab.url }, () => {
-      chrome.storage.local.remove(tab.key, () => {
+      chrome.storage.sync.remove(tab.key, () => {
         setTabs(prevTabs => prevTabs.filter(item => item.key !== tab.key))
       })
     })

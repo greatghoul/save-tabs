@@ -1,6 +1,9 @@
 import { html } from '../libs/preact.js'
 import { styled } from '../libs/goober.js'
 
+const titleText = chrome.i18n.getMessage('headerTitle')
+const searchPlaceholder = chrome.i18n.getMessage('searchPlaceholder')
+
 const HeaderRow = styled('div')`
   display: flex;
   align-items: center;
@@ -53,12 +56,12 @@ export function Header ({ count, searchQuery, onSearchChange }) {
   return html`
     <${HeaderRow}>
       <${HeaderLeft}>
-        <${HeaderTitle}>Saved Tabs<//>
+        <${HeaderTitle}>${titleText}<//>
         <${HeaderCount}>${count}<//>
       <//>
       <${SearchInput}
         type="search"
-        placeholder="Search"
+        placeholder=${searchPlaceholder}
         value=${searchQuery}
         onInput=${event => onSearchChange(event.target.value)}
       />

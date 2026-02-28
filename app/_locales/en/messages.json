@@ -14,5 +14,17 @@
   "btnSave": {
   	"message": "SAVE",
   	"description": "Button to save the active tab."
+  },
+  "headerTitle": {
+  	"message": "Saved Tabs",
+  	"description": "Header title for the saved tabs list."
+  },
+  "searchPlaceholder": {
+  	"message": "Search",
+  	"description": "Placeholder text for search input."
+  },
+  "footerTip": {
+  	"message": "+ Click icon to save current tab without opening popup",
+  	"description": "Footer tip for fast save mode (after the Ctrl key)."
   }
 }
