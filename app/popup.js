@@ -1,9 +1,37 @@
-import { html, render, useCallback, useEffect, useState } from './libs/preact.js'
+import { h, html, render, useCallback, useEffect, useState } from './libs/preact.js'
+import { glob, setup, styled } from './libs/goober.js'
+import { ActiveTab } from './components/ActiveTab.js'
+import { SavedTabItem } from './components/SavedTabItem.js'
+
+setup(h)
+glob`
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+`
+
+const PopupRoot = styled('div')`
+  width: 300px;
+  height: 300px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+`
+
+const TabsList = styled('div')`
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+`
 
 function PopupApp () {
   const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(null)
-  const [saveLabel, setSaveLabel] = useState('')
 
   const fetchTabs = useCallback(() => {
     chrome.storage.local.get(null, items => {
@@ -51,33 +79,23 @@ function PopupApp () {
   }, [])
 
   useEffect(() => {
-    setSaveLabel(chrome.i18n.getMessage('btnSave'))
     fetchTabs()
     fetchActiveTab()
   }, [fetchTabs, fetchActiveTab])
 
   return html`
-    <div>
+    <${PopupRoot}>
       ${activeTab && html`
-        <div class="tab-new">
-          <strong>${activeTab.title}</strong>
-          <a href="#" class="pull-right" onClick=${saveNewTab}>${saveLabel}</a>
-        </div>
+        <${ActiveTab} tab=${activeTab} onSave=${saveNewTab} />
       `}
-      <div class="tabs">
+      <${TabsList}>
         ${tabs.map(
           tab => html`
-            <a
-              href="#"
-              onClick=${event => {
-                event.preventDefault()
-                openTab(tab)
-              }}
-            >${tab.title}</a>
+            <${SavedTabItem} tab=${tab} onOpen=${openTab} />
           `
         )}
-      </div>
-    </div>
+      <//>
+    <//>
   `
 }
 
