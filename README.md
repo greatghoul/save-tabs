@@ -2,6 +2,8 @@
 
 A Chrome extension that saves your active tab with one click.
 
+![Save Tabs Screenshot](assets/screenshot.png)
+
 ## Features
 
 - **Quick Save** - Click the extension icon to save the current tab
