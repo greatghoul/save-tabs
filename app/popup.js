@@ -32,15 +32,23 @@ const PopupRoot = styled('div')`
 
 const HeaderRow = styled('div')`
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
   padding: 2px 2px 0;
+`
+
+const HeaderLeft = styled('div')`
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
 `
 
 const HeaderTitle = styled('div')`
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 `
 
 const HeaderCount = styled('div')`
@@ -50,6 +58,24 @@ const HeaderCount = styled('div')`
   background: #e8f0ff;
   padding: 2px 8px;
   border-radius: 999px;
+  white-space: nowrap;
+`
+
+const SearchInput = styled('input')`
+  margin-left: auto;
+  width: 120px;
+  min-width: 0;
+  border: 1px solid #c8dcff;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #1d1f2a;
+
+  &:focus {
+    outline: none;
+    border-color: #2f7cff;
+  }
 `
 
 const TabsList = styled('div')`
@@ -65,6 +91,7 @@ const TabsList = styled('div')`
 function PopupApp () {
   const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const fetchTabs = useCallback(() => {
     chrome.storage.local.get(null, items => {
@@ -116,17 +143,34 @@ function PopupApp () {
     fetchActiveTab()
   }, [fetchTabs, fetchActiveTab])
 
+  const normalizedQuery = searchQuery.trim().toLowerCase()
+  const filteredTabs = normalizedQuery
+    ? tabs.filter(tab => {
+        const titleMatch = tab.title && tab.title.toLowerCase().includes(normalizedQuery)
+        const urlMatch = tab.url && tab.url.toLowerCase().includes(normalizedQuery)
+        return titleMatch || urlMatch
+      })
+    : tabs
+
   return html`
     <${PopupRoot}>
       <${HeaderRow}>
-        <${HeaderTitle}>Saved Tabs<//>
-        <${HeaderCount}>${tabs.length}<//>
+        <${HeaderLeft}>
+          <${HeaderTitle}>Saved Tabs<//>
+          <${HeaderCount}>${filteredTabs.length}<//>
+        <//>
+        <${SearchInput}
+          type="search"
+          placeholder="Search"
+          value=${searchQuery}
+          onInput=${event => setSearchQuery(event.target.value)}
+        />
       <//>
       ${activeTab && html`
         <${ActiveTab} tab=${activeTab} onSave=${saveNewTab} />
       `}
       <${TabsList}>
-        ${tabs.map(
+        ${filteredTabs.map(
           tab => html`
             <${SavedTabItem} tab=${tab} onOpen=${openTab} />
           `
