@@ -19,8 +19,8 @@ glob`
 `
 
 const PopupRoot = styled('div')`
-  width: 300px;
-  height: 300px;
+  width: 360px;
+  height: 420px;
   margin: 0;
   padding: 12px;
   box-sizing: border-box;
@@ -30,8 +30,31 @@ const PopupRoot = styled('div')`
   gap: 10px;
 `
 
+const HeaderRow = styled('div')`
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 2px 2px 0;
+`
+
+const HeaderTitle = styled('div')`
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+`
+
+const HeaderCount = styled('div')`
+  font-size: 12px;
+  font-weight: 700;
+  color: #2f7cff;
+  background: #e8f0ff;
+  padding: 2px 8px;
+  border-radius: 999px;
+`
+
 const TabsList = styled('div')`
-  max-height: 300px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
@@ -95,6 +118,10 @@ function PopupApp () {
 
   return html`
     <${PopupRoot}>
+      <${HeaderRow}>
+        <${HeaderTitle}>Saved Tabs<//>
+        <${HeaderCount}>${tabs.length}<//>
+      <//>
       ${activeTab && html`
         <${ActiveTab} tab=${activeTab} onSave=${saveNewTab} />
       `}
