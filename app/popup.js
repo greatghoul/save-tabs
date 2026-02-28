@@ -8,6 +8,9 @@ glob`
   body {
     margin: 0;
     padding: 0;
+    background: #f8f9ff;
+    color: #1d1f2a;
+    font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
   }
 
   *, *::before, *::after {
@@ -19,14 +22,21 @@ const PopupRoot = styled('div')`
   width: 300px;
   height: 300px;
   margin: 0;
-  padding: 0;
+  padding: 12px;
   box-sizing: border-box;
+  background: #f8f9ff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 `
 
 const TabsList = styled('div')`
   max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 `
 
 function PopupApp () {

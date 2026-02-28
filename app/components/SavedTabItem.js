@@ -2,15 +2,20 @@ import { html } from '../libs/preact.js'
 import { styled } from '../libs/goober.js'
 
 const TabLink = styled('a')`
-  padding: 5px 10px;
+  padding: 8px 10px;
   display: block;
   text-decoration: none;
-  margin: 1px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
+  border: 1px solid #e1e6f5;
+  border-radius: 8px;
+  color: #1d1f2a;
   word-break: break-word;
+  font-size: 12px;
+  line-height: 1.25;
 
   &:hover {
-    background-color: #eeeeee;
+    background-color: #f3f6ff;
+    border-color: #c8dcff;
   }
 `
 
