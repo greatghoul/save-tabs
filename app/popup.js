@@ -2,6 +2,8 @@ import { h, html, render, useCallback, useEffect, useState } from './libs/preact
 import { glob, setup, styled } from './libs/goober.js'
 import { ActiveTab } from './components/ActiveTab.js'
 import { SavedTabItem } from './components/SavedTabItem.js'
+import { Header } from './components/Header.js'
+import { Footer } from './components/Footer.js'
 
 setup(h)
 glob`
@@ -30,54 +32,6 @@ const PopupRoot = styled('div')`
   gap: 10px;
 `
 
-const HeaderRow = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 2px 2px 0;
-`
-
-const HeaderLeft = styled('div')`
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  min-width: 0;
-`
-
-const HeaderTitle = styled('div')`
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-`
-
-const HeaderCount = styled('div')`
-  font-size: 12px;
-  font-weight: 700;
-  color: #2f7cff;
-  background: #e8f0ff;
-  padding: 2px 8px;
-  border-radius: 999px;
-  white-space: nowrap;
-`
-
-const SearchInput = styled('input')`
-  margin-left: auto;
-  width: 120px;
-  min-width: 0;
-  border: 1px solid #c8dcff;
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 6px 8px;
-  font-size: 12px;
-  color: #1d1f2a;
-
-  &:focus {
-    outline: none;
-    border-color: #2f7cff;
-  }
-`
-
 const TabsList = styled('div')`
   flex: 1;
   min-height: 0;
@@ -86,21 +40,6 @@ const TabsList = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 6px;
-`
-
-const Footer = styled('div')`
-  font-size: 11px;
-  color: #6b7a99;
-  padding: 4px 0 0;
-`
-
-const FooterKey = styled('kbd')`
-  background: #e8f0ff;
-  border: 1px solid #c8dcff;
-  border-radius: 4px;
-  padding: 1px 4px;
-  font-family: inherit;
-  font-size: 10px;
 `
 
 function PopupApp () {
@@ -169,18 +108,7 @@ function PopupApp () {
 
   return html`
     <${PopupRoot}>
-      <${HeaderRow}>
-        <${HeaderLeft}>
-          <${HeaderTitle}>Saved Tabs<//>
-          <${HeaderCount}>${filteredTabs.length}<//>
-        <//>
-        <${SearchInput}
-          type="search"
-          placeholder="Search"
-          value=${searchQuery}
-          onInput=${event => setSearchQuery(event.target.value)}
-        />
-      <//>
+      <${Header} count=${filteredTabs.length} searchQuery=${searchQuery} onSearchChange=${setSearchQuery} />
       ${activeTab && html`
         <${ActiveTab} tab=${activeTab} onSave=${saveNewTab} />
       `}
@@ -191,9 +119,7 @@ function PopupApp () {
           `
         )}
       <//>
-      <${Footer}>
-        <${FooterKey}>Ctrl<//> + Click icon to save current tab without opening popup
-      <//>
+      <${Footer} />
     <//>
   `
 }
