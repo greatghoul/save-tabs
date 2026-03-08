@@ -118,15 +118,19 @@ function PopupApp () {
         url: activeTab.url
       }
 
-      chrome.storage.sync.set({ [key]: tab }, () => {
+      chrome.storage.sync.set({ [key]: tab }, async () => {
         if (chrome.runtime.lastError) return
-        fetchTabs()
+        const savedTabs = await fetchTabs()
         if (settings.saveMode === 'saveAndClose') {
           chrome.tabs.remove(activeTab.id)
+          setHighlightedTabKey(key)
+        } else {
+          const currentTab = await fetchActiveTab()
+          checkExistingTab(savedTabs, currentTab)
         }
       })
     },
-    [activeTab, settings.saveMode, fetchTabs]
+    [activeTab, settings.saveMode, fetchTabs, fetchActiveTab, checkExistingTab]
   )
 
   const openTab = useCallback(tab => {
