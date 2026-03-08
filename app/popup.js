@@ -1,4 +1,4 @@
-import { h, html, render, useCallback, useEffect, useState } from './libs/preact.js'
+import { h, html, render, useCallback, useEffect, useRef, useState } from './libs/preact.js'
 import { glob, setup, styled } from './libs/goober.js'
 import { ActiveTab } from './components/ActiveTab.js'
 import { SavedTabItem } from './components/SavedTabItem.js'
@@ -55,22 +55,40 @@ function PopupApp () {
   const [searchQuery, setSearchQuery] = useState('')
   const [showSettings, setShowSettings] = useState(false)
   const [settings, setSettings] = useState(DEFAULT_SETTINGS)
+  const [highlightedTabKey, setHighlightedTabKey] = useState(null)
 
   const fetchTabs = useCallback(() => {
-    chrome.storage.sync.get(null, items => {
-      const nextTabs = Object.keys(items)
-        .filter(key => key.startsWith('tab-'))
-        .map(key => items[key])
-        .sort((a, b) => b.key.localeCompare(a.key))
+    return new Promise((resolve) => {
+      chrome.storage.sync.get(null, items => {
+        const nextTabs = Object.keys(items)
+          .filter(key => key.startsWith('tab-'))
+          .map(key => items[key])
+          .sort((a, b) => b.key.localeCompare(a.key))
 
-      setTabs(nextTabs)
+        setTabs(nextTabs)
+        resolve(nextTabs)
+      })
     })
   }, [])
 
   const fetchActiveTab = useCallback(() => {
-    chrome.tabs.query({ currentWindow: true, active: true }, result => {
-      setActiveTab(result[0] || null)
+    return new Promise((resolve) => {
+      chrome.tabs.query({ currentWindow: true, active: true }, result => {
+        const tab = result[0] || null
+        setActiveTab(tab)
+        resolve(tab)
+      })
     })
+  }, [])
+
+  const checkExistingTab = useCallback((savedTabs, currentTab) => {
+    if (!currentTab || !currentTab.url) return false
+    const existingTab = savedTabs.find(tab => tab.url === currentTab.url)
+    if (existingTab) {
+      setHighlightedTabKey(existingTab.key)
+      return true
+    }
+    return false
   }, [])
 
   const fetchSettings = useCallback(() => {
@@ -122,10 +140,21 @@ function PopupApp () {
   }, [settings.restoreMode, settings.activateAfterRestore])
 
   useEffect(() => {
-    fetchTabs()
-    fetchActiveTab()
-    fetchSettings()
-  }, [fetchTabs, fetchActiveTab, fetchSettings])
+    const init = async () => {
+      const savedTabs = await fetchTabs()
+      const currentTab = await fetchActiveTab()
+      fetchSettings()
+      checkExistingTab(savedTabs, currentTab)
+    }
+    init()
+  }, [fetchTabs, fetchActiveTab, fetchSettings, checkExistingTab])
+
+  useEffect(() => {
+    if (highlightedTabKey) {
+      const element = document.querySelector(`[data-tab-key="${highlightedTabKey}"]`)
+      element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [highlightedTabKey])
 
   const normalizedQuery = searchQuery.trim().toLowerCase()
   const filteredTabs = normalizedQuery
@@ -136,28 +165,35 @@ function PopupApp () {
       })
     : tabs
 
+  const shouldShowActiveTab = activeTab && highlightedTabKey === null
+
   return html`
     <${PopupRoot}>
-      <${Header} 
-        count=${filteredTabs.length} 
-        searchQuery=${searchQuery} 
+      <${Header}
+        count=${filteredTabs.length}
+        searchQuery=${searchQuery}
         onSearchChange=${setSearchQuery}
         onSettingsClick=${() => setShowSettings(true)}
       />
-      ${activeTab && html`
+      ${shouldShowActiveTab && html`
         <${ActiveTab} tab=${activeTab} onSave=${saveNewTab} />
       `}
       <${TabsList}>
         ${filteredTabs.map(
           tab => html`
-            <${SavedTabItem} tab=${tab} onOpen=${openTab} />
+            <${SavedTabItem} 
+              key=${tab.key}
+              tab=${tab} 
+              onOpen=${openTab}
+              isHighlighted=${tab.key === highlightedTabKey}
+            />
           `
         )}
       <//>
       <${Footer} />
-      
+
       ${showSettings && html`
-        <${SettingsModal} 
+        <${SettingsModal}
           settings=${settings}
           onSave=${saveSettings}
           onClose=${() => setShowSettings(false)}
