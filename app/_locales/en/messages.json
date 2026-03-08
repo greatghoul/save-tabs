@@ -26,5 +26,41 @@
   "footerTip": {
   	"message": "+ Click icon to save current tab without opening popup",
   	"description": "Footer tip for fast save mode (after the Ctrl key)."
+  },
+  "settingsTitle": {
+    "message": "Settings",
+    "description": "Title for the settings modal."
+  },
+  "saveModeLabel": {
+    "message": "Save Mode",
+    "description": "Label for save mode setting."
+  },
+  "saveModeSaveOnly": {
+    "message": "Save only",
+    "description": "Option to save tab without closing."
+  },
+  "saveModeSaveAndClose": {
+    "message": "Save and close",
+    "description": "Option to save tab and close it."
+  },
+  "restoreModeLabel": {
+    "message": "Restore Mode",
+    "description": "Label for restore mode setting."
+  },
+  "restoreModeRestoreOnly": {
+    "message": "Restore only",
+    "description": "Option to restore tab without removing from saved list."
+  },
+  "restoreModeRestoreAndRemove": {
+    "message": "Restore and remove",
+    "description": "Option to restore tab and remove from saved list."
+  },
+  "activateAfterRestoreLabel": {
+    "message": "Activate tab after restore",
+    "description": "Label for activate tab after restore checkbox."
+  },
+  "saveButton": {
+    "message": "Save",
+    "description": "Button to save settings."
   }
 }

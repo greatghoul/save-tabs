@@ -26,5 +26,41 @@
   "footerTip": {
   	"message": "+ 点击图标可直接暂存当前标签页",
   	"description": "Footer tip for fast save mode (after the Ctrl key)."
+  },
+  "settingsTitle": {
+    "message": "设置",
+    "description": "Title for the settings modal."
+  },
+  "saveModeLabel": {
+    "message": "保存方式",
+    "description": "Label for save mode setting."
+  },
+  "saveModeSaveOnly": {
+    "message": "仅保存",
+    "description": "Option to save tab without closing."
+  },
+  "saveModeSaveAndClose": {
+    "message": "保存并关闭",
+    "description": "Option to save tab and close it."
+  },
+  "restoreModeLabel": {
+    "message": "恢复方式",
+    "description": "Label for restore mode setting."
+  },
+  "restoreModeRestoreOnly": {
+    "message": "仅恢复",
+    "description": "Option to restore tab without removing from saved list."
+  },
+  "restoreModeRestoreAndRemove": {
+    "message": "恢复并移除",
+    "description": "Option to restore tab and remove from saved list."
+  },
+  "activateAfterRestoreLabel": {
+    "message": "恢复后激活标签页",
+    "description": "Label for activate tab after restore checkbox."
+  },
+  "saveButton": {
+    "message": "保存",
+    "description": "Button to save settings."
   }
 }

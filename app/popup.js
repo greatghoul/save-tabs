@@ -4,6 +4,7 @@ import { ActiveTab } from './components/ActiveTab.js'
 import { SavedTabItem } from './components/SavedTabItem.js'
 import { Header } from './components/Header.js'
 import { Footer } from './components/Footer.js'
+import { SettingsModal } from './components/SettingsModal.js'
 
 setup(h)
 glob`
@@ -42,10 +43,18 @@ const TabsList = styled('div')`
   gap: 6px;
 `
 
+const DEFAULT_SETTINGS = {
+  saveMode: 'saveAndClose',
+  restoreMode: 'restoreAndRemove',
+  activateAfterRestore: false
+}
+
 function PopupApp () {
   const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [showSettings, setShowSettings] = useState(false)
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS)
 
   const fetchTabs = useCallback(() => {
     chrome.storage.sync.get(null, items => {
@@ -64,6 +73,21 @@ function PopupApp () {
     })
   }, [])
 
+  const fetchSettings = useCallback(() => {
+    chrome.storage.sync.get(['settings'], result => {
+      if (result.settings) {
+        setSettings({ ...DEFAULT_SETTINGS, ...result.settings })
+      }
+    })
+  }, [])
+
+  const saveSettings = useCallback((newSettings) => {
+    chrome.storage.sync.set({ settings: newSettings }, () => {
+      setSettings(newSettings)
+      setShowSettings(false)
+    })
+  }, [])
+
   const saveNewTab = useCallback(
     event => {
       if (event) event.preventDefault()
@@ -78,24 +102,30 @@ function PopupApp () {
 
       chrome.storage.sync.set({ [key]: tab }, () => {
         if (chrome.runtime.lastError) return
-        chrome.tabs.remove(activeTab.id)
+        fetchTabs()
+        if (settings.saveMode === 'saveAndClose') {
+          chrome.tabs.remove(activeTab.id)
+        }
       })
     },
-    [activeTab]
+    [activeTab, settings.saveMode, fetchTabs]
   )
 
   const openTab = useCallback(tab => {
-    chrome.tabs.create({ active: false, url: tab.url }, () => {
-      chrome.storage.sync.remove(tab.key, () => {
-        setTabs(prevTabs => prevTabs.filter(item => item.key !== tab.key))
-      })
+    chrome.tabs.create({ active: settings.activateAfterRestore, url: tab.url }, () => {
+      if (settings.restoreMode === 'restoreAndRemove') {
+        chrome.storage.sync.remove(tab.key, () => {
+          setTabs(prevTabs => prevTabs.filter(item => item.key !== tab.key))
+        })
+      }
     })
-  }, [])
+  }, [settings.restoreMode, settings.activateAfterRestore])
 
   useEffect(() => {
     fetchTabs()
     fetchActiveTab()
-  }, [fetchTabs, fetchActiveTab])
+    fetchSettings()
+  }, [fetchTabs, fetchActiveTab, fetchSettings])
 
   const normalizedQuery = searchQuery.trim().toLowerCase()
   const filteredTabs = normalizedQuery
@@ -108,7 +138,12 @@ function PopupApp () {
 
   return html`
     <${PopupRoot}>
-      <${Header} count=${filteredTabs.length} searchQuery=${searchQuery} onSearchChange=${setSearchQuery} />
+      <${Header} 
+        count=${filteredTabs.length} 
+        searchQuery=${searchQuery} 
+        onSearchChange=${setSearchQuery}
+        onSettingsClick=${() => setShowSettings(true)}
+      />
       ${activeTab && html`
         <${ActiveTab} tab=${activeTab} onSave=${saveNewTab} />
       `}
@@ -120,6 +155,14 @@ function PopupApp () {
         )}
       <//>
       <${Footer} />
+      
+      ${showSettings && html`
+        <${SettingsModal} 
+          settings=${settings}
+          onSave=${saveSettings}
+          onClose=${() => setShowSettings(false)}
+        />
+      `}
     <//>
   `
 }
