@@ -1,3 +1,7 @@
+const DEFAULT_SETTINGS = {
+	saveMode: 'saveAndClose'
+}
+
 function saveActiveTab (activeTab) {
 	const key = `tab-${Date.now()}`
 	const tab = {
@@ -8,7 +12,13 @@ function saveActiveTab (activeTab) {
 
 	chrome.storage.sync.set({ [key]: tab }, () => {
 		if (chrome.runtime.lastError) return
-		chrome.tabs.remove(activeTab.id)
+
+		chrome.storage.sync.get(['settings'], result => {
+			const settings = { ...DEFAULT_SETTINGS, ...(result.settings || {}) }
+			if (settings.saveMode === 'saveAndClose') {
+				chrome.tabs.remove(activeTab.id)
+			}
+		})
 	})
 }
 
