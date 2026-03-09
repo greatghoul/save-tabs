@@ -2,15 +2,25 @@
 
 A Chrome extension that saves your active tab with one click.
 
-![Save Tabs Screenshot](assets/screenshot.png)
-
 ## Features
 
 - **Quick Save** - Click the extension icon to save the current tab
-- **Fast Save Mode** - Hold Ctrl and click the icon to save without opening the popup
-- **Reopen & Restore** - Click any saved tab to reopen it and remove from the list
+- **Fast Save Mode** - Hold Ctrl and click the icon to save without opening the popup (respects your save settings)
+- **Flexible Save Options** - Choose to save & close tab, or save only
+- **One-Click Restore** - Click any saved tab to reopen it
+- **Smart Restore Options** - Choose to restore & remove, or keep in list after restore
 - **Search & Filter** - Search through your saved tabs by title or URL
-- **Privacy First** - All data stored locally, no external servers
+- **Customizable Settings** - Configure save and restore behavior to match your workflow
+
+## Screenshots
+
+**Main Interface**
+
+![Save Tabs Screenshot](assets/screenshot.png)
+
+**Settings Page**
+
+![Save Tabs Settings](assets/screenshot-settings.png)
 
 ## Installation
 
